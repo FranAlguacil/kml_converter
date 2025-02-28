@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor KML a SHP</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h1 class="card-title text-center">Conversor KML a SHP</h1>
+            </div>
+            <div class="card-body">
+                <form action="/" method="post" enctype="multipart/form-data" class="mb-4">
+                    <div class="mb-3">
+                        <label for="fileInput" class="form-label">Selecciona archivos KML:</label>
+                        <input type="file" name="files" id="fileInput" class="form-control" multiple accept=".kml">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Convertir</button>
+                </form>
+
+                <!-- Mensajes de alerta -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="mt-4">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Archivos convertidos -->
+                {% if output_files %}
+                    <h2 class="mt-4">Archivos Convertidos:</h2>
+                    <ul class="list-group">
+                        {% for file in output_files %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ file }}
+                                <a href="{{ url_for('main.download_file', filename=file) }}" download class="btn btn-success btn-sm">Descargar ZIP</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS y dependencias -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
